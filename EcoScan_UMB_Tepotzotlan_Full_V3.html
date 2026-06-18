@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoScan UMB Tepotzotlán - Premium v3</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --deep-forest: #064e3b;
+            --accent-copper: #f97316;
+            --bg-dark: #020617;
+            --text-slate: #334155;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Lato', sans-serif;
+            scroll-behavior: smooth;
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 60px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+            border-left: 15px solid var(--deep-forest);
+        }
+
+        /* Estética Mesh Gradient sutil */
+        .slide-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 95% 5%, rgba(249, 115, 22, 0.08) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; color: var(--deep-forest); }
+        
+        .slide-title {
+            font-size: 38px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slide-title::after {
+            content: '';
+            flex-grow: 1;
+            height: 4px;
+            background: var(--accent-copper);
+        }
+
+        p { font-size: 19px; color: var(--text-slate); line-height: 1.6; }
+
+        .btn-nav {
+            background: var(--deep-forest);
+            color: white;
+            padding: 18px 35px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.3s;
+            border: none;
+        }
+        .btn-nav:hover { background: var(--accent-copper); transform: translateY(-3px); }
+
+        .floating-menu-btn {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            background: var(--accent-copper);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 13px;
+            z-index: 100;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Dashboard de Navegación */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .dash-card {
+            background: #f8fafc;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            transition: 0.4s;
+        }
+        .dash-card:hover { 
+            background: var(--deep-forest); 
+            border-color: var(--accent-copper);
+            transform: scale(1.02);
+        }
+        .dash-card i { font-size: 35px; color: var(--accent-copper); margin-bottom: 15px; }
+        .dash-card h3 { font-size: 18px; margin-bottom: 10px; transition: 0.3s; }
+        .dash-card p { font-size: 14px; transition: 0.3s; }
+        .dash-card:hover h3, .dash-card:hover p { color: white; }
+
+        /* Mapa */
+        .map-frame {
+            width: 100%;
+            height: 480px;
+            border: 8px solid #f1f5f9;
+            position: relative;
+            background: #eee;
+        }
+        .map-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .pin {
+            position: absolute;
+            font-size: 32px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Secciones de Contenido */
+        .content-split { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .image-box { width: 100%; height: 450px; object-fit: cover; border-radius: 4px; }
+        
+        .metric-card {
+            border-left: 8px solid var(--accent-copper);
+            background: #f8fafc;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .metric-val { font-size: 55px; font-weight: 800; color: var(--deep-forest); display: block; }
+
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        .scanner-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-copper);
+            box-shadow: 0 0 15px var(--accent-copper);
+            animation: scan 3s infinite linear;
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: PORTADA -->
+<div class="slide-container" id="inicio" style="background: linear-gradient(rgba(6,78,59,0.92), rgba(6,78,59,0.92)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1350&q=80'); background-size: cover; border-left: none;">
+    <div style="margin: auto; text-align: center; color: white;">
+        <p style="letter-spacing: 6px; font-weight: 300; margin-bottom: 20px; opacity: 0.8;">PROYECTO DE INGENIERÍA SUSTENTABLE</p>
+        <h1 style="color: white; font-size: 110px; line-height: 0.9; margin-bottom: 30px;">ECOSCAN<br><span style="color: var(--accent-copper);">UMB</span></h1>
+        <p style="font-size: 24px; font-weight: 300; max-width: 700px; margin: 0 auto 50px;">Estrategia Avanzada de Gestión de Residuos para la Unidad Académica Tepotzotlán.</p>
+        <a href="#menu" class="btn-nav">Ingresar al Sistema <i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+</div>
+
+<!-- SLIDE 2: DASHBOARD CENTRAL -->
+<div class="slide-container" id="menu">
+    <h2 class="slide-title">Panel de Control Principal</h2>
+    <div class="dashboard">
+        <a href="#mapa" class="dash-card"><i class="fa-solid fa-map-location-dot"></i><h3>Localizador Campus</h3><p>Mapa real UMB Tepotzotlán.</p></a>
+        <a href="#scanner" class="dash-card"><i class="fa-solid fa-microchip"></i><h3>Identificador IA</h3><p>Clasificación por visión.</p></a>
+        <a href="#pasos" class="dash-card"><i class="fa-solid fa-list-check"></i><h3>20 Pasos Guía</h3><p>Acciones inmediatas.</p></a>
+        <a href="#sabias" class="dash-card"><i class="fa-solid fa-earth-americas"></i><h3>Datos Globales</h3><p>Impacto ambiental real.</p></a>
+        <a href="#metricas" class="dash-card"><i class="fa-solid fa-chart-line"></i><h3>Métricas UMB</h3><p>Estadísticas del plantel.</p></a>
+        <a href="#digital" class="dash-card"><i class="fa-solid fa-laptop-code"></i><h3>Eco-Digital</h3><p>Hábitos tecnológicos.</p></a>
+        <a href="#roadmap" class="dash-card"><i class="fa-solid fa-timeline"></i><h3>Roadmap 2025</h3><p>Futuro del proyecto.</p></a>
+        <a href="#contacto" class="dash-card"><i class="fa-solid fa-headset"></i><h3>Soporte Técnico</h3><p>Contacto Christian B.</p></a>
+    </div>
+</div>
+
+<!-- SLIDE 3: MAPA REAL -->
+<div class="slide-container" id="mapa">
+    <a href="#menu" class="floating-menu-btn">Menú</a>
+    <h2 class="slide-title">Localización de Botes UMB</h2>
+    <div class="content-split">
+        <div class="map-frame">
+            <img src="input_file_0.png" class="map-img" alt="Mapa Campus">
+            <i class="fa-solid fa-location-dot pin" style="color: #f97316; top: 35%; left: 45%;"></i>
+            <i class="fa-solid fa-location-dot pin" style="color: #064e3b; top: 60%; left: 55%;"></i>
+            <i class="fa-solid fa-location-dot pin" style="color: #0288d1; top: 45%; left: 68%;"></i>
+        </div>
+        <div>
+            <h3>Infraestructura de Recolección</h3>
+            <p>Utilizamos geolocalización para optimizar la ruta de vaciado y asegurar que cada estudiante tenga un punto de depósito a menos de 30 metros.</p>
+            <div style="margin-top: 30px;">
+                <p><i class="fa-solid fa-square" style="color: #f97316;"></i> Botes Orgánicos</p>
+                <p><i class="fa-solid fa-square" style="color: #064e3b;"></i> Contenedores PET</p>
+                <p><i class="fa-solid fa-square" style="color: #0288d1;"></i> Recolección Papel</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 4: SCANNER IA -->
+<div class="slide-container" id="scanner">
+    <a href="#menu" class="floating-menu-btn">Menú</a>
+    <h2 class="slide-title">Visión por Computadora</h2>
+    <div class="content-split">
+        <div>
+            <h3>¿Cómo funciona?</h3>
+            <p>La cámara identifica la composición química aparente y la forma del objeto. En milisegundos, EcoScan determina el destino final.</p>
+            <div class="metric-card" style="margin-top: 30px;">
+                <span class="metric-val">98.7%</span>
+                <p>Precisión en identificación de polímeros (PET, PEAD).</p>
+            </div>
+        </div>
+        <div style="width: 320px; height: 500px; background: #000; border: 12px solid #333; border-radius: 40px; margin: 0 auto; position: relative; overflow: hidden;">
+            <div class="scanner-line"></div>
+            <p style="color: white; text-align: center; margin-top: 220px; font-weight: bold; opacity: 0.4;">ANALIZANDO...</p>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 5: PASOS 1-4 (REDUCCIÓN) -->
+<div class="slide-container" id="pasos">
+    <a href="#menu" class="floating-menu-btn">Menú</a>
+    <h2 class="slide-title">Guía de Acción: Reducción</h2>
+    <div class="dashboard" style="grid-template-columns: 1fr 1fr;">
+        <div class="metric-card"><h3>01. Elimina el Unicel</h3><p>Es un material no biodegradable que contamina el subsuelo de Tepotzotlán.</p></div>
+        <div class="metric-card"><h3>02. Termo Obligatorio</h3><p>Evita las 300 botellas anuales que consume un estudiante promedio.</p></div>
+        <div class="metric-card"><h3>03. Dieta Zero Waste</h3><p>Prefiere snacks sin empaques plásticos en la cafetería.</p></div>
+        <div class="metric-card"><h3>04. Cubiertos Propios</h3><p>El plástico de un solo uso tarda 400 años en degradarse.</p></div>
+    </div>
+</div>
+
+<!-- SECCIÓN DATOS CURIOSOS (10 SLIDES EN UNO POR BREVEDAD, PERO DISEÑADOS PARA NAVEGAR) -->
+<div class="slide-container" id="sabias">
+    <a href="#menu" class="floating-menu-btn">Menú</a>
+    <h2 class="slide-title">Datos que Impactan</h2>
+    <div class="content-split">
+        <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=800&q=80" class="image-box">
+        <div>
+            <div class="metric-card">
+                <span class="metric-val">15,000 L</span>
+                <p>De agua para producir solo 1kg de carne de res. La dieta impacta más que la ducha.</p>
+            </div>
+            <p><strong>El Aluminio es Infinito:</strong> Reciclar una lata ahorra el 95% de energía vs fabricar una nueva.</p>
+            <p style="margin-top: 20px;"><strong>Papel y Oxígeno:</strong> Una tonelada de papel reciclado salva 17 árboles adultos.</p>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 7: MÉTRICAS UMB -->
+<div class="slide-container" id="metricas">
+    <a href="#menu" class="floating-menu-btn">Menú</a>
+    <h2 class="slide-title">Métricas del Plantel</h2>
+    <div style="display: flex; align-items: flex-end; gap: 40px; height: 350px; border-bottom: 2px solid #ddd; padding-bottom: 20px; margin-top: 50px;">
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 80px; height: 85%; background: var(--deep-forest);"></div>
+            <p style="margin-top: 15px; font-weight: 700;">Separación (85%)</p>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 80px; height: 40%; background: var(--accent-copper);"></div>
+            <p style="margin-top: 15px; font-weight: 700;">Desechos (40%)</p>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 80px; height: 65%; background: #0288d1;"></div>
+            <p style="margin-top: 15px; font-weight: 700;">Reciclaje (65%)</p>
+        </div>
+    </div>
+    <p style="text-align: center; margin-top: 40px; font-style: italic;">Datos proyectados para la Unidad Académica Tepotzotlán 2024-2025.</p>
+</div>
+
+<!-- SLIDE FINAL: CONTACTO -->
+<div class="slide-container" id="contacto" style="background: var(--bg-dark); color: white; border-left: 15px solid var(--accent-copper);">
+    <div style="margin: auto; text-align: center;">
+        <h2 style="color: white; font-size: 55px; margin-bottom: 20px;">Transformemos la UMB</h2>
+        <p style="color: var(--accent-copper); font-size: 24px; font-weight: 700; letter-spacing: 2px;">SOPORTE Y COLABORACIÓN</p>
+        
+        <div class="dashboard" style="margin-top: 50px; max-width: 900px; margin-left: auto; margin-right: auto;">
+            <div class="dash-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <i class="fa-solid fa-envelope"></i>
+                <h3 style="color: white;">Email</h3>
+                <p style="color: #cbd5e1;">christianbarrios329@gmail.com</p>
+            </div>
+            <div class="dash-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <i class="fa-solid fa-phone"></i>
+                <h3 style="color: white;">WhatsApp</h3>
+                <p style="color: #cbd5e1;">55 3726 3259</p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 60px;">
+            <a href="#inicio" class="btn-nav" style="background: var(--accent-copper);">Reiniciar Presentación</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
